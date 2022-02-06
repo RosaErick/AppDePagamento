@@ -1,7 +1,7 @@
 import react from "react";
 import { getUser } from "./getUser";
 import { useState, useEffect } from "react";
-import { Component } from "react/cjs/react.production.min";
+import { Component } from "react";
 
 const API_URL = "https://www.mocky.io/v2/5d531c4f2e0000620081ddce";
 
@@ -29,18 +29,31 @@ class UserList extends Component {
     }
   }
 
-  createList() {
+  drawList() {
     return this.state.users.map((item) => {
       return (
         <>
-          <h1>{item.name}</h1>
+          <ul>
+            <li>
+              <img className="userImg" src={item.img} alt="" />
+              <div className="userData">
+                <p className="username">{item.name}</p>
+                <p className="userid">ID: {item.id}</p>
+                <p className="username">Username: {item.username}</p>
+              </div>
+
+              <div className="paybutton">
+                <button onCLick>Pagar</button>
+              </div>
+            </li>
+          </ul>
         </>
       );
     });
   }
 
   render() {
-    return <li>{this.createList()}</li>;
+    return <>{this.drawList()}</>;
   }
 }
 
