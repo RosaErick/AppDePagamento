@@ -82,7 +82,7 @@ class UserList extends Component {
     const card = document.getElementById("card").value;
     console.log(card, payValue);
 
-    if (card == 'card0') {
+    if (card == "card0") {
       fetch(API_URL_TRANSACTION, {
         method: "POST",
         body: JSON.stringify({
@@ -92,21 +92,30 @@ class UserList extends Component {
           destination_user_id: this.state.selectedUser,
           value: payValue,
         }),
-    headers: {
-        "Content-type": "application/json; charset=UTF-8"
-    }
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
       })
         .then((response) => {
           return response.json();
-          
         })
         .then((json) => {
           console.log(json.status);
 
-
-        }).catch((error) => {
+          if (json.status) {
+            document.getElementsByClassName("modal-payresult")[0].innerHTML =
+              `<h1>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</h1>`;
+          }
+        })
+        .catch((error) => {
           console.log(error);
-        });;
+        });
+    }
+    else {
+
+ document.getElementsByClassName("modal-payresult")[0].innerHTML =
+              `<h1>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</h1>`;
+
     }
   };
 
@@ -173,11 +182,10 @@ class UserList extends Component {
               className="modalButton"
               onClick={(e) => {
                 e.preventDefault();
-          
 
                 this.sendForm(e);
 
-                      this.setState({ show: false });
+                //this.setState({ show: false });
               }}
             >
               PAGAR
@@ -188,11 +196,7 @@ class UserList extends Component {
             <div className="modalTitle">
               <p>Recibo de pagamento</p>
             </div>
-            <div className="modal_content">
-              <h2 id="payment-succes">O pagamento foi concluído com sucesso</h2>
-              <h2 id="payment-error">
-                O pagamento não foi concluído com sucesso
-              </h2>
+            <div className="modal-payresult">
               <button>Concluir Transação</button>
             </div>
           </div>
