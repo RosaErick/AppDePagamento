@@ -208,12 +208,16 @@ class UserList extends Component {
               onClick={(e) => {
                 e.preventDefault();
                 this.sendForm(e);
-    
+                const value = document.getElementById("value").value;
                 const card = document.getElementById("card").value;
                 this.setState({ display: true });
 
-                if (card === "") {
+                if (value === "") {
                   document.getElementById("value").focus();
+                  this.setState({ display: false });
+                }
+
+                if (card === "") {
                   document.getElementById("card").focus();
                   this.setState({ display: false });
                 }
