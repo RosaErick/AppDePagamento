@@ -1,6 +1,5 @@
 import { Component } from "react";
 import styled from "styled-components";
-import "../App.css";
 
 const UserBox = styled.ul`
   margin: 0 0 2px 0;
@@ -22,13 +21,16 @@ const UserBox = styled.ul`
   }
 `;
 const Modal = styled.div`
-width:50%;
-position:absolute;
-top:0;
-
-
-
-`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  flex-direction: column;
+  z-index: 99;
+`;
 
 //lista dos cartões
 let cards = [
@@ -69,12 +71,44 @@ class UserList extends Component {
       const response = await fetch(API_URL);
       const data = await response.json();
       this.setState({ users: data });
-
-      console.log(this.state);
     } catch (error) {
       console.log(error);
     }
   }
+
+  sendForm = (e) => {
+    e.preventDefault();
+    const payValue = document.getElementById("value").value;
+    const card = document.getElementById("card").value;
+    console.log(card, payValue);
+
+    if (card == 'card0') {
+      fetch(API_URL_TRANSACTION, {
+        method: "POST",
+        body: JSON.stringify({
+          card_number: "1111111111111111",
+          cvv: 789,
+          expiry_date: "01/18",
+          destination_user_id: this.state.selectedUser,
+          value: payValue,
+        }),
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    }
+      })
+        .then((response) => {
+          return response.json();
+          
+        })
+        .then((json) => {
+          console.log(json.status);
+
+
+        }).catch((error) => {
+          console.log(error);
+        });;
+    }
+  };
 
   drawList = () => {
     return this.state.users.map((item) => {
@@ -118,7 +152,7 @@ class UserList extends Component {
               Pagamento para <span>{this.state.selectedUser}</span>
             </p>
           </div>
-          <form action="" className="modalForm">
+          <form className="modalForm">
             <input
               name="value"
               type="number"
@@ -135,15 +169,33 @@ class UserList extends Component {
               ))}
             </select>
             <button
+              type="submit"
               className="modalButton"
               onClick={(e) => {
-                this.setState({ show: false });
-                console.log(this.state);
+                e.preventDefault();
+          
+
+                this.sendForm(e);
+
+                      this.setState({ show: false });
               }}
             >
               PAGAR
             </button>
           </form>
+
+          <div className="PaymentResumeBox">
+            <div className="modalTitle">
+              <p>Recibo de pagamento</p>
+            </div>
+            <div className="modal_content">
+              <h2 id="payment-succes">O pagamento foi concluído com sucesso</h2>
+              <h2 id="payment-error">
+                O pagamento não foi concluído com sucesso
+              </h2>
+              <button>Concluir Transação</button>
+            </div>
+          </div>
         </Modal>
       );
     }
@@ -152,8 +204,8 @@ class UserList extends Component {
   render() {
     return (
       <>
-        {this.drawList()}
         {this.drawModal()}
+        {this.drawList()}
       </>
     );
   }
