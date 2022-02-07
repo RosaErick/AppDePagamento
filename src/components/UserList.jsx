@@ -57,7 +57,7 @@ class UserList extends Component {
     this.state = {
       users: [],
       selectedUser: "",
-      display: "none",
+      display: false,
       show: false,
     };
   }
@@ -126,8 +126,8 @@ class UserList extends Component {
 
           if (json.status) {
             document.getElementsByClassName(
-              "modal-payresult"
-            )[0].innerHTML = `<h1>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</h1>`;
+              "payment-msg"
+            )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</p>`;
           }
         })
         .catch((error) => {
@@ -136,8 +136,8 @@ class UserList extends Component {
     }
     if (card == "card1") {
       document.getElementsByClassName(
-        "modal-payresult"
-      )[0].innerHTML = `<h1>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</h1>`;
+        "payment-msg"
+      )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</p>`;
     }
   };
 
@@ -178,28 +178,33 @@ class UserList extends Component {
     if (this.state.show == true) {
       return (
         <Modal>
-          <div className="modalTitle">
+          <div className={`${!this.state.display ? "modalTitle" : "hide"}`}>
             <p>
               Pagamento para <span>{this.state.selectedUser}</span>
             </p>
+            <div
+              className="closeButton"
+              onClick={() => {
+                this.setState({ show: false });
+              }}
+            >
+              {" "}
+              <span>X</span>
+            </div>
           </div>
-          <form className="modalForm">
+          <form className={`${!this.state.display ? "modalForm" : "hide"}`}>
             <input
               name="value"
               type="text"
               id="value"
               placeholder="R$ 0,00"
-              onKeyPress={(e) => {
-                this.formatValue(e);
-
-                //this.setState({ show: false });
-              }}
+              onKeyPress={(e) => this.formatValue(e)}
               required
             ></input>
             <select name="card" id="card" required>
               <option value="">Selecione o cartão</option>
-              {cards.map((card, index) => (
-                <option value={"card" + index} key={"card" + index}>
+              {cards.map((card, cardNumber) => (
+                <option value={"card" + cardNumber} key={"card" + cardNumber}>
                   Cartão com final {card.card_number.substr(-4)}
                 </option>
               ))}
@@ -211,20 +216,31 @@ class UserList extends Component {
                 e.preventDefault();
 
                 this.sendForm(e);
+                this.setState({ display: true });
 
-                //this.setState({ show: false });
+                console.log(this.state);
               }}
             >
-              PAGAR
+              Pagar
             </button>
           </form>
 
-          <div className="PaymentResumeBox">
+          <div
+            className={`${this.state.display ? "PaymentResumeBox" : "hide"}`}
+          >
             <div className="modalTitle">
               <p>Recibo de pagamento</p>
             </div>
+
             <div className="modal-payresult">
-              <button>Concluir Transação</button>
+              <p className="payment-msg"> </p>
+              <button
+                onClick={() => {
+                  this.setState({ show: false, display: false });
+                }}
+              >
+                Concluir Transação
+              </button>
             </div>
           </div>
         </Modal>
