@@ -14,6 +14,12 @@ box-size:border-box;
 
 body{
   height:100%;
+    margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Ubuntu', 'Roboto', 'Oxygen',
+    'Segoe UI', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -22,7 +28,9 @@ body{
     cursor:pointer;
     padding:5px;
   }
-  
+    .userData {
+    flex: 1;
+  }
   
 .modalTitle{
     background-color: #474a6e;
@@ -34,7 +42,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px 6px 0 6px;
+    border-radius: 6px 6px 0 0;
     
   .closeButton {
   position:absolute;
@@ -60,7 +68,7 @@ body{
   align-items:center;
   width:50%;
   background-color:#fff;
-  border-radius: 0 6px 6px 6px;
+  border-radius: 0 0 6px 6px;
 
 
   input, select, button {

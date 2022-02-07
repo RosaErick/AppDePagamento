@@ -15,10 +15,6 @@ const UserBox = styled.ul`
     padding: 20px;
     border-radius: 150px;
   }
-
-  .userData {
-    flex: 1;
-  }
 `;
 const Modal = styled.div`
   position: fixed;
@@ -79,7 +75,6 @@ class UserList extends Component {
   formatValue = (e) => {
     const letterPattern = /[^0-9]/;
     if (letterPattern.test(e.key)) {
-      //console.log(e.key)
       e.preventDefault();
       return;
     }
@@ -102,7 +97,7 @@ class UserList extends Component {
     e.preventDefault();
     const payValue = document.getElementById("value").value;
     const card = document.getElementById("card").value;
-    console.log(card, payValue);
+    const select = document.getElementById("");
 
     if (card == "card0") {
       fetch(API_URL_TRANSACTION, {
@@ -160,8 +155,6 @@ class UserList extends Component {
                   onClick={(e) => {
                     this.setState({ selectedUser: item.name });
                     this.setState({ show: true });
-
-                    console.log(this.state);
                   }}
                 >
                   Pagar
@@ -214,11 +207,18 @@ class UserList extends Component {
               className="modalButton"
               onClick={(e) => {
                 e.preventDefault();
-
                 this.sendForm(e);
+    
+                const card = document.getElementById("card").value;
                 this.setState({ display: true });
 
-                console.log(this.state);
+                if (card === "") {
+                  document.getElementById("value").focus();
+                  document.getElementById("card").focus();
+                  this.setState({ display: false });
+                }
+
+                console.log(card);
               }}
             >
               Pagar
