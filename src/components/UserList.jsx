@@ -76,6 +76,28 @@ class UserList extends Component {
     }
   }
 
+  formatValue = (e) => {
+    const letterPattern = /[^0-9]/;
+    if (letterPattern.test(e.key)) {
+      //console.log(e.key)
+      e.preventDefault();
+      return;
+    }
+    if (!e.currentTarget.value) return;
+
+    let newValue = e.currentTarget.value.toString();
+    newValue = newValue.replace(/[\D]+/g, "");
+    newValue = newValue.replace(/([0-9]{1})$/g, ",$1");
+
+    if (newValue.length >= 6) {
+      while (/([0-9]{4})[,|.]/g.test(newValue)) {
+        newValue = newValue.replace(/([0-9]{1})$/g, ",$1");
+        newValue = newValue.replace(/([0-9]{3})[,|.]/g, ".$1");
+      }
+    }
+    e.currentTarget.value = newValue;
+  };
+
   sendForm = (e) => {
     e.preventDefault();
     const payValue = document.getElementById("value").value;
@@ -103,19 +125,19 @@ class UserList extends Component {
           console.log(json.status);
 
           if (json.status) {
-            document.getElementsByClassName("modal-payresult")[0].innerHTML =
-              `<h1>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</h1>`;
+            document.getElementsByClassName(
+              "modal-payresult"
+            )[0].innerHTML = `<h1>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</h1>`;
           }
         })
         .catch((error) => {
           console.log(error);
         });
     }
-    else {
-
- document.getElementsByClassName("modal-payresult")[0].innerHTML =
-              `<h1>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</h1>`;
-
+    if (card == "card1") {
+      document.getElementsByClassName(
+        "modal-payresult"
+      )[0].innerHTML = `<h1>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</h1>`;
     }
   };
 
@@ -164,9 +186,14 @@ class UserList extends Component {
           <form className="modalForm">
             <input
               name="value"
-              type="number"
+              type="text"
               id="value"
               placeholder="R$ 0,00"
+              onKeyPress={(e) => {
+                this.formatValue(e);
+
+                //this.setState({ show: false });
+              }}
               required
             ></input>
             <select name="card" id="card" required>
