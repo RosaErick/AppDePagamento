@@ -91,15 +91,6 @@ display:none;
   align-items:center;
   width:100%;
   
-
-
-
-.modal-payresult {
-
-
-}
-
-
 p {
 padding:30px;
 font-size:15px;

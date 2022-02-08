@@ -1,6 +1,7 @@
 import { Component } from "react";
 import styled from "styled-components";
 
+// Styling List with syled-components
 const UserBox = styled.ul`
   margin: 0 0 2px 0;
   li {
@@ -44,10 +45,12 @@ let cards = [
   },
 ];
 
+//API URL'S
 const API_URL = "https://www.mocky.io/v2/5d531c4f2e0000620081ddce";
 const API_URL_TRANSACTION = `https://run.mocky.io/v3/533cd5d7-63d3-4488-bf8d-4bb8c751c989`;
 
 class UserList extends Component {
+  //Use state control
   constructor() {
     super();
     this.state = {
@@ -58,10 +61,12 @@ class UserList extends Component {
     };
   }
 
+  // get list from api after component is mounted
   async componentDidMount() {
     this.fetchUserList();
   }
 
+  // get list data function - GET using FETCH
   async fetchUserList() {
     try {
       const response = await fetch(API_URL);
@@ -72,6 +77,7 @@ class UserList extends Component {
     }
   }
 
+  // Input form validation
   formatValue = (e) => {
     const letterPattern = /[^0-9]/;
     if (letterPattern.test(e.key)) {
@@ -93,11 +99,12 @@ class UserList extends Component {
     e.currentTarget.value = newValue;
   };
 
+  // Send form and POST transaction form with FETCH
+
   sendForm = (e) => {
     e.preventDefault();
     const payValue = document.getElementById("value").value;
     const card = document.getElementById("card").value;
-    const select = document.getElementById("");
 
     if (card == "card0") {
       fetch(API_URL_TRANSACTION, {
@@ -122,7 +129,7 @@ class UserList extends Component {
           if (json.status) {
             document.getElementsByClassName(
               "payment-msg"
-            )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} foi concluido com Sucesso.</p>`;
+            )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} foi concluido com sucesso!</p>`;
           }
         })
         .catch((error) => {
@@ -132,10 +139,11 @@ class UserList extends Component {
     if (card == "card1") {
       document.getElementsByClassName(
         "payment-msg"
-      )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} não foi concluido com Sucesso.</p>`;
+      )[0].innerHTML = `<p>O Pagamento para ${this.state.selectedUser} <span style="color:red">não </span> foi concluido. Cartão Invalído.</p>`;
     }
   };
 
+  // render list function
   drawList = () => {
     return this.state.users.map((item) => {
       return (
@@ -166,6 +174,8 @@ class UserList extends Component {
       );
     });
   };
+
+  //render modal function
 
   drawModal = () => {
     if (this.state.show == true) {
